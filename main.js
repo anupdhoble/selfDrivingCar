@@ -1,3 +1,13 @@
+
+//Car Types:
+//AI - AI model will self drive the car
+//KEYS - Keyboard arrow keys can be used to drive car
+//DUMMY - Traffic dummy cars
+
+
+
+
+
 const carCanvas =document.getElementById("carCanvas");
 carCanvas.width=200;
 const networkCanvas =document.getElementById("networkCanvas");
@@ -7,18 +17,32 @@ const carCtx =carCanvas.getContext("2d");
 const networkCtx =networkCanvas.getContext("2d");
 const road = new Road(carCanvas.width/2,carCanvas.width*0.9);
 
-const N=100;
+const N=5;
 const cars=generateCars(N);
 this.bestCar=cars[0];
 if(localStorage.getItem("bestBrain")){
-    bestCar.brain=JSON.parse(
-        localStorage.getItem("bestBrain")
-    );
-}
+    for(let i=0;i<cars.length;i++){
+        cars[i].brain=JSON.parse(
+            localStorage.getItem("bestBrain")
+        );
+
+        if(i!=0){
+            NeuralNetworks.mutate(cars[i].brain,0.05);//0.1 is amount to mutate
+        }
+    }
+    }
+    
 
 
 const traffic=[
-    new Car(road.getLaneCenter(1),-100,30,50,"DUMMY",1)
+    new Car(road.getLaneCenter(1),-100,30,50,"DUMMY",1),
+    new Car(road.getLaneCenter(1),-300,30,50,"DUMMY",1),
+    new Car(road.getLaneCenter(2),-300,30,50,"DUMMY",1),
+    new Car(road.getLaneCenter(0),-500,30,50,"DUMMY",1),
+    new Car(road.getLaneCenter(1),-500,30,50,"DUMMY",1),
+    new Car(road.getLaneCenter(0),-700,30,50,"DUMMY",1),
+    new Car(road.getLaneCenter(0),-900,30,50,"DUMMY",1),
+    new Car(road.getLaneCenter(2),-900,30,50,"DUMMY",1),
 ];//traffic are cars in array
 
 animate();
