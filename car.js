@@ -1,5 +1,5 @@
 class Car {
-    constructor(x, y, width, height,controlType,maxSpeed=3) {
+    constructor(x, y, width, height, controlType, maxSpeed = 3) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -13,44 +13,48 @@ class Car {
         this.angle = 0;
         this.damaged = false;
 
-        this.useBrain=controlType=="AI";
+        this.useBrain = controlType == "AI";
+
+        this.img = new Image();
+        this.img.src = "car.png";
 
 
 
-        if(controlType!="DUMMY"){//No need for sensor for fummy cars in traffic
+
+        if (controlType != "DUMMY") {//No need for sensor for fummy cars in traffic
             this.sensor = new Sensor(this);
             this.brain = new NeuralNetworks(
-                [this.sensor.rayCount,6,4]
+                [this.sensor.rayCount, 6, 4]
             );//rayCount as first layer , 6 hidden layer, 4 utput layer for left right up down controls;
         }
-        
+
         this.controls = new Controls(controlType);
     }
 
-    update(roadBorders,traffic) {
+    update(roadBorders, traffic) {
         if (!this.damaged) {
             this.#move();
             this.polygon = this.#createPolygon();
-            this.damaged = this.#assessDamage(roadBorders,traffic);
+            this.damaged = this.#assessDamage(roadBorders, traffic);
         }
-        if(this.sensor){
-            this.sensor.update(roadBorders,traffic);
-            const offsets=this.sensor.readings.map(
-                s=>s==null?0:1-s.offset
+        if (this.sensor) {
+            this.sensor.update(roadBorders, traffic);
+            const offsets = this.sensor.readings.map(
+                s => s == null ? 0 : 1 - s.offset
             );
-            const outputs=NeuralNetworks.feedForward(offsets,this.brain);
+            const outputs = NeuralNetworks.feedForward(offsets, this.brain);
             // console.log(outputs);
 
-            if(this.useBrain){
-                this.controls.forward=outputs[0];
-                this.controls.left=outputs[1];
-                this.controls.right=outputs[2];
-                this.controls.reverse=outputs[3];
+            if (this.useBrain) {
+                this.controls.forward = outputs[0];
+                this.controls.left = outputs[1];
+                this.controls.right = outputs[2];
+                this.controls.reverse = outputs[3];
             }
         }
     }
 
-    #assessDamage(roadBorders,traffic) {
+    #assessDamage(roadBorders, traffic) {
         for (let i = 0; i < roadBorders.length; i++) {
             if (polysIntersect(this.polygon, roadBorders[i])) {
                 return true;
@@ -133,23 +137,34 @@ class Car {
         this.y -= Math.cos(this.angle) * this.speed;
     }
 
-    draw(ctx,color,drawSensor=false) {
-        if (this.damaged) {
-            ctx.fillStyle = "gray";
-        }
-        else {
-            ctx.fillStyle = color;
-        }
-        ctx.beginPath();
-        ctx.moveTo(this.polygon[0].x, this.polygon[0].y);
-        for (let i = 1; i < this.polygon.length; i++) {
-            ctx.lineTo(this.polygon[i].x, this.polygon[i].y);
-        }
-        ctx.fill();
+    draw(ctx, color, drawSensor = false) {
 
-        if(this.sensor && drawSensor){
+        if (this.sensor && drawSensor) {
             this.sensor.draw(ctx);
         }
-        
+
+        // if (this.damaged) {
+        //     ctx.fillStyle = "gray";
+        // }
+        // else {
+        //     ctx.fillStyle = color;
+        // }
+        // ctx.beginPath();
+        // ctx.moveTo(this.polygon[0].x, this.polygon[0].y);
+        // for (let i = 1; i < this.polygon.length; i++) {
+        //     ctx.lineTo(this.polygon[i].x, this.polygon[i].y);
+        // }
+        // ctx.fill();
+
+        //After adding car image
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(-this.angle);
+        ctx.drawImage(this.img,
+            -this.width / 2,
+            -this.height / 2,
+            this.width,
+            this.height);
+        ctx.restore();
     }
 }
