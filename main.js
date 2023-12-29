@@ -9,6 +9,12 @@ const road = new Road(carCanvas.width/2,carCanvas.width*0.9);
 
 const N=100;
 const cars=generateCars(N);
+this.bestCar=cars[0];
+if(localStorage.getItem("bestBrain")){
+    bestCar.brain=JSON.parse(
+        localStorage.getItem("bestBrain")
+    );
+}
 
 
 const traffic=[
@@ -17,7 +23,15 @@ const traffic=[
 
 animate();
 
+//we need to save the good controllable cars from all ai driven cars , we do so in local storage
+function save(){
+    localStorage.setItem("bestBrain",
+    JSON.stringify(bestCar.brain));
+}
 
+function discard(){
+    localStorage.removeItem("bestBrain");
+}
 
 function generateCars(N){
     const cars=[];
@@ -35,11 +49,11 @@ function animate(time){
         cars[i].update(road.borders,traffic);
     }
 
-    const bestCar = cars.find(
+    bestCar = cars.find(
         c=>c.y==Math.min(
             ...cars.map(c=>c.y) // there is need to spread cars array as Math function dont support arrays
         )
-    );
+    );//acts like fitness function 2:17:20 in yt video
 
     carCanvas.height=window.innerHeight;
     networkCanvas.height=window.innerHeight;
