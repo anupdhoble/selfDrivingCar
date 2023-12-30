@@ -17,7 +17,7 @@ const carCtx =carCanvas.getContext("2d");
 const networkCtx =networkCanvas.getContext("2d");
 const road = new Road(carCanvas.width/2,carCanvas.width*0.9);
 
-const N=5;
+const N=1;
 const cars=generateCars(N);
 this.bestCar=cars[0];
 if(localStorage.getItem("bestBrain")){
@@ -27,7 +27,7 @@ if(localStorage.getItem("bestBrain")){
         );
 
         if(i!=0){
-            NeuralNetworks.mutate(cars[i].brain,0.05);//0.1 is amount to mutate
+            NeuralNetworks.mutate(cars[i].brain,0.02);//0.1 is amount to mutate
         }
     }
     }
@@ -36,13 +36,24 @@ if(localStorage.getItem("bestBrain")){
 
 const traffic=[
     new Car(road.getLaneCenter(1),-100,30,50,"DUMMY",1),
+    new Car(road.getLaneCenter(2),-100,30,50,"DUMMY",1),
     new Car(road.getLaneCenter(1),-300,30,50,"DUMMY",1),
-    new Car(road.getLaneCenter(2),-300,30,50,"DUMMY",1),
-    new Car(road.getLaneCenter(0),-500,30,50,"DUMMY",1),
+    new Car(road.getLaneCenter(0),-300,30,50,"DUMMY",1),
     new Car(road.getLaneCenter(1),-500,30,50,"DUMMY",1),
+    // new Car(road.getLaneCenter(2),-500,30,50,"DUMMY",1),
     new Car(road.getLaneCenter(0),-700,30,50,"DUMMY",1),
-    new Car(road.getLaneCenter(0),-900,30,50,"DUMMY",1),
-    new Car(road.getLaneCenter(2),-900,30,50,"DUMMY",1),
+    new Car(road.getLaneCenter(2),-700,30,50,"DUMMY",1),
+    new Car(road.getLaneCenter(1),-900,30,50,"DUMMY",1),
+    new Car(road.getLaneCenter(0),-1100,30,50,"DUMMY",1),
+    new Car(road.getLaneCenter(1),-1100,30,50,"DUMMY",1),
+    new Car(road.getLaneCenter(2),-1300,30,50,"DUMMY",1),
+    new Car(road.getLaneCenter(1),-1300,30,50,"DUMMY",1),
+    new Car(road.getLaneCenter(1),-1500,30,50,"DUMMY",1),
+    new Car(road.getLaneCenter(2),-1500,30,50,"DUMMY",1),
+    new Car(road.getLaneCenter(1),-1700,30,50,"DUMMY",1),
+    new Car(road.getLaneCenter(0),-1700,30,50,"DUMMY",1),
+    new Car(road.getLaneCenter(2),-1700,30,50,"DUMMY",1),
+    // new Car(road.getLaneCenter(2),-900,30,50,"DUMMY",1),
 ];//traffic are cars in array
 
 animate();
